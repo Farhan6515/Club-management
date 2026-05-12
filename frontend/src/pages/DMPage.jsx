@@ -36,7 +36,7 @@ const DMPage = () => {
     }).catch(() => toast.error('Failed to load conversation'));
 
     // Socket
-    sock = io('http://localhost:5100', { auth: { token }, transports: ['websocket'] });
+    sock = io(import.meta.env.VITE_API_URL, { auth: { token }, transports: ['websocket'] });
     sock.on('connect',    () => { setConnected(true); sock.emit('join-dm', roomId); });
     sock.on('disconnect', () => setConnected(false));
     sock.on('new-dm',     (msg) => setMessages(prev => [...prev, msg]));

@@ -29,7 +29,7 @@ const ClubChat = ({ clubId }) => {
     });
 
     // Connect socket
-    socketInstance = io('http://localhost:5100', {
+    socketInstance = io(import.meta.env.VITE_API_URL, {
       auth: { token },
       transports: ['websocket'],
     });
