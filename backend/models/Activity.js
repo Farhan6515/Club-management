@@ -41,6 +41,12 @@ const activitySchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    media: [
+      {
+        url:  { type: String, required: true },
+        type: { type: String, enum: ['image', 'video'], required: true },
+      },
+    ],
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,

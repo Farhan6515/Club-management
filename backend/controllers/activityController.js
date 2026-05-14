@@ -1,7 +1,29 @@
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 const Activity = require('../models/Activity');
 const Club = require('../models/Club');
 const User = require('../models/User');
 const { awardPoints } = require('../services/gamificationService');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = path.join(__dirname, '../uploads/posts');
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, `${req.user._id}-${Date.now()}${ext}`);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  const allowed = /\.(jpg|jpeg|png|gif|webp|mp4|webm|mov)$/i;
+  allowed.test(path.extname(file.originalname)) ? cb(null, true) : cb(new Error('Only images and videos are allowed'));
+};
+
+exports.upload = multer({ storage, fileFilter, limits: { fileSize: 50 * 1024 * 1024 } });
 
 // @desc    Create a new activity for a club (post/event/announcement)
 // @route   POST /api/activities/club/:clubId
@@ -9,6 +31,11 @@ const { awardPoints } = require('../services/gamificationService');
 exports.createActivity = async (req, res, next) => {
   try {
     const { type, title, content, eventDate, eventLocation, image } = req.body;
+    const base = `${req.protocol}://${req.get('host')}`;
+    const media = (req.files || []).map(f => ({
+      url: `${base}/uploads/posts/${f.filename}`,
+      type: f.mimetype.startsWith('video/') ? 'video' : 'image',
+    }));
     const club = await Club.findById(req.params.clubId);
     if (!club) {
       return res
@@ -51,6 +78,7 @@ exports.createActivity = async (req, res, next) => {
       eventDate: type === 'event' ? eventDate : undefined,
       eventLocation: type === 'event' ? eventLocation : undefined,
       image: image || '',
+      media,
     });
 
     const populated = await Activity.findById(activity._id)

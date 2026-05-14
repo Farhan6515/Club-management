@@ -123,6 +123,24 @@ const ActivityCard = ({ activity, onDelete, showClubName = false }) => {
         <h3 className="text-lg font-bold text-white">{activity.title}</h3>
         <p className="mt-2 whitespace-pre-line text-sm text-slate-400">{activity.content}</p>
 
+        {activity.media?.length > 0 && (
+          <div className={`mt-3 grid gap-1.5 rounded-xl overflow-hidden ${
+            activity.media.length === 1 ? 'grid-cols-1' :
+            activity.media.length === 2 ? 'grid-cols-2' :
+            'grid-cols-2'
+          }`}>
+            {activity.media.map((m, i) => (
+              m.type === 'video'
+                ? <video key={i} src={m.url} controls className="w-full max-h-72 rounded-lg bg-black object-contain" />
+                : <img key={i} src={m.url} alt="" onClick={() => window.open(m.url, '_blank')}
+                    className={`w-full object-cover rounded-lg cursor-pointer hover:opacity-90 transition ${
+                      activity.media.length === 1 ? 'max-h-80' : 'h-40'
+                    } ${activity.media.length === 3 && i === 0 ? 'col-span-2' : ''}`}
+                  />
+            ))}
+          </div>
+        )}
+
         {activity.type === 'event' && activity.eventDate && (
           <div className="mt-3 rounded-lg border border-indigo-500/30 bg-indigo-500/10 p-3 text-sm">
             <div className="flex items-center gap-2 text-indigo-400">
