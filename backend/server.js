@@ -107,7 +107,13 @@ io.on('connection', (socket) => {
 });
 
 // ── Express middleware ─────────────────────────────────────────────────────
-app.use(cors());
+const corsOptions = {
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+app.options('*', cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV !== 'production') app.use(morgan('dev'));
