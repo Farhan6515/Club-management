@@ -213,7 +213,7 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden flex-1 items-center justify-evenly md:flex">
           <NavLink to="/home" className={navLinkClass}><Home size={16} /> Home</NavLink>
           <NavLink to="/clubs" className={navLinkClass}><Search size={16} /> Discover</NavLink>
           {user?.role === 'admin' && (
@@ -273,13 +273,13 @@ const Navbar = () => {
       </div>
 
       {/* Mobile bottom nav */}
-      <nav className="flex items-center overflow-x-auto border-t border-gray-200 px-1 py-1 md:hidden scrollbar-hide dark:border-slate-700">
-        <NavLink to="/home" className={navLinkClass}><Home size={16} /> Home</NavLink>
-        <NavLink to="/clubs" className={navLinkClass}><Search size={16} /> Clubs</NavLink>
+      <nav className="flex w-full items-center border-t border-gray-200 md:hidden dark:border-slate-700">
+        <NavLink to="/home" className={navLinkClass + ' flex-1 justify-center'}><Home size={16} /> Home</NavLink>
+        <NavLink to="/clubs" className={navLinkClass + ' flex-1 justify-center'}><Search size={16} /> Clubs</NavLink>
         {user?.role === 'admin' && (
-          <NavLink to="/admin" className={navLinkClass}><Shield size={16} /> Admin</NavLink>
+          <NavLink to="/admin" className={navLinkClass + ' flex-1 justify-center'}><Shield size={16} /> Admin</NavLink>
         )}
-        <NavLink to="/profile" className={navLinkClass}><User size={16} /> Profile</NavLink>
+        <NavLink to="/profile" className={navLinkClass + ' flex-1 justify-center'}><User size={16} /> Profile</NavLink>
       </nav>
     </header>
   );
