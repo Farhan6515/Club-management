@@ -1,7 +1,57 @@
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 const Club = require('../models/Club');
 const User = require('../models/User');
 const Activity = require('../models/Activity');
 const { awardPoints } = require('../services/gamificationService');
+
+const coverStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = path.join(__dirname, '../uploads/covers');
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, `club-${req.params.id}-${Date.now()}${ext}`);
+  },
+});
+exports.uploadCover = multer({
+  storage: coverStorage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    file.mimetype.startsWith('image/') ? cb(null, true) : cb(new Error('Only images allowed'));
+  },
+});
+
+// @desc    Upload club cover image
+// @route   POST /api/clubs/:id/cover
+// @access  Private (club admin only)
+exports.uploadCoverImage = async (req, res, next) => {
+  try {
+    if (!req.file) return res.status(400).json({ success: false, message: 'No file uploaded' });
+
+    const club = await Club.findById(req.params.id);
+    if (!club) return res.status(404).json({ success: false, message: 'Club not found' });
+    if (club.admin.toString() !== req.user._id.toString())
+      return res.status(403).json({ success: false, message: 'Only the club admin can change the cover' });
+
+    // Delete old cover file if stored locally
+    if (club.coverImage && !club.coverImage.startsWith('http')) {
+      const old = path.join(__dirname, '..', club.coverImage);
+      if (fs.existsSync(old)) fs.unlinkSync(old);
+    }
+
+    const base = `${req.protocol}://${req.get('host')}`;
+    club.coverImage = `${base}/uploads/covers/${req.file.filename}`;
+    await club.save();
+
+    res.json({ success: true, coverImage: club.coverImage });
+  } catch (err) {
+    next(err);
+  }
+};
 
 // @desc    Get all clubs (with optional search & filters)
 // @route   GET /api/clubs

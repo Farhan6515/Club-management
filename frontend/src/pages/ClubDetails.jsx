@@ -200,7 +200,11 @@ const ClubDetails = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="card overflow-hidden">
-        <div className="h-32 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 sm:h-48" />
+        <div className="relative h-32 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 sm:h-48">
+          {club.coverImage && (
+            <img src={club.coverImage} alt="cover" className="h-full w-full object-cover" />
+          )}
+        </div>
         <div className="p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>

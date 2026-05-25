@@ -13,6 +13,8 @@ const {
   getMyAdminClubs,
   assignPosition,
   removePosition,
+  uploadCover,
+  uploadCoverImage,
 } = require('../controllers/clubController');
 const {
   protect,
@@ -37,5 +39,6 @@ router.post('/:id/leave', protect, leaveClub);
 router.delete('/:id/members/:userId', protect, adminOnly, removeMember);
 router.put('/:id/positions/:userId',    protect, assignPosition);
 router.delete('/:id/positions/:userId', protect, removePosition);
+router.post('/:id/cover', protect, uploadCover.single('cover'), uploadCoverImage);
 
 module.exports = router;

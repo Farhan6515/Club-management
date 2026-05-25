@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -11,6 +11,7 @@ import {
   X,
   Award,
   ImagePlus,
+  Camera,
 } from 'lucide-react';
 
 const POSITIONS = ['President', 'Vice President', 'Secretary', 'Treasurer', 'Event Coordinator', 'Media Head', 'Technical Lead'];
@@ -52,6 +53,8 @@ const ClubAdmin = () => {
   });
   const [mediaFiles, setMediaFiles] = useState([]);
   const [mediaPreviews, setMediaPreviews] = useState([]);
+  const [uploadingCover, setUploadingCover] = useState(false);
+  const coverInputRef = useRef(null);
 
   useEffect(() => {
     loadAll();
@@ -99,6 +102,26 @@ const ClubAdmin = () => {
       toast.error(err.response?.data?.message || 'Failed to update');
     } finally {
       setSavingClub(false);
+    }
+  };
+
+  const handleCoverChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingCover(true);
+    try {
+      const formData = new FormData();
+      formData.append('cover', file);
+      const { data } = await api.post(`/clubs/${id}/cover`, formData, {
+        headers: { 'Content-Type': undefined },
+      });
+      setClub(c => ({ ...c, coverImage: data.coverImage }));
+      toast.success('Cover photo updated!');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Upload failed');
+    } finally {
+      setUploadingCover(false);
+      e.target.value = '';
     }
   };
 
@@ -207,7 +230,27 @@ const ClubAdmin = () => {
       </Link>
 
       {/* Club details */}
-      <div className="card p-6">
+      <div className="card overflow-hidden">
+        {/* Cover photo */}
+        <div className="relative h-36 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 sm:h-48">
+          {club.coverImage && (
+            <img src={club.coverImage} alt="cover" className="h-full w-full object-cover" />
+          )}
+          <input ref={coverInputRef} type="file" accept="image/*" className="hidden" onChange={handleCoverChange} />
+          <button
+            onClick={() => coverInputRef.current?.click()}
+            disabled={uploadingCover}
+            className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-lg bg-black/50 px-3 py-1.5 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-black/70"
+          >
+            {uploadingCover
+              ? <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              : <Camera size={15} />
+            }
+            {uploadingCover ? 'Uploading…' : 'Change Cover'}
+          </button>
+        </div>
+
+        <div className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             {editingClub ? (
@@ -275,6 +318,7 @@ const ClubAdmin = () => {
               </button>
             )}
           </div>
+        </div>
         </div>
       </div>
 
