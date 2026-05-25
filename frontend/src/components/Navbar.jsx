@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
   Home, Search, User, LogOut, Shield, Users,
-  Bell, UserCheck, UserX, MessageSquare, Newspaper, Trophy,
+  Bell, UserCheck, UserX, MessageSquare, Newspaper,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
@@ -212,7 +212,6 @@ const Navbar = () => {
         <nav className="hidden items-center gap-1 md:flex">
           <NavLink to="/home" className={navLinkClass}><Home size={16} /> Home</NavLink>
           <NavLink to="/clubs" className={navLinkClass}><Search size={16} /> Discover</NavLink>
-          <NavLink to="/leaderboard" className={navLinkClass}><Trophy size={16} /> Leaderboard</NavLink>
           {user?.role === 'admin' && (
             <NavLink to="/admin" className={navLinkClass}><Shield size={16} /> Admin</NavLink>
           )}
@@ -264,7 +263,6 @@ const Navbar = () => {
       <nav className="flex items-center overflow-x-auto border-t border-slate-700 px-1 py-1 md:hidden scrollbar-hide">
         <NavLink to="/home" className={navLinkClass}><Home size={16} /> Home</NavLink>
         <NavLink to="/clubs" className={navLinkClass}><Search size={16} /> Clubs</NavLink>
-        <NavLink to="/leaderboard" className={navLinkClass}><Trophy size={16} /> Board</NavLink>
         {user?.role === 'admin' && (
           <NavLink to="/admin" className={navLinkClass}><Shield size={16} /> Admin</NavLink>
         )}

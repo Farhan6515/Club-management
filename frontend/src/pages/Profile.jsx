@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import {
   Edit, Save, X, Mail, Building, Shield,
   UserCheck, UserX, MessageSquare, Users, UserPlus, Camera,
-  Star, Trophy, Flame, Zap, TrendingUp,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
@@ -506,8 +505,7 @@ const Profile = () => {
   }, []);
 
   const pageTabs = [
-    { key: 'profile', label: 'Profile',   mLabel: 'Profile',   icon: null                  },
-    { key: 'stats',   label: 'Stats',     mLabel: 'Stats',     icon: <Star size={14} />    },
+    { key: 'profile', label: 'Profile',      mLabel: 'Profile', icon: null                   },
     { key: 'friends', label: 'Friends & DMs', mLabel: 'Friends', icon: <UserPlus size={14} /> },
   ];
 
@@ -526,7 +524,6 @@ const Profile = () => {
       </div>
 
       {tab === 'profile' && <ProfileTab user={user} updateUser={updateUser} clubs={clubs} />}
-      {tab === 'stats'   && <GamificationTab />}
       {tab === 'friends' && <FriendsTab />}
     </div>
   );

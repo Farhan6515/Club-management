@@ -11,7 +11,6 @@ import ClubAdmin from './pages/ClubAdmin.jsx';
 import UserProfile from './pages/UserProfile.jsx';
 import FriendsPage from './pages/FriendsPage.jsx';
 import DMPage from './pages/DMPage.jsx';
-import Leaderboard from './pages/Leaderboard.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Navbar from './components/Navbar.jsx';
 import { useAuth } from './context/AuthContext.jsx';
@@ -89,7 +88,6 @@ const App = () => {
         <Route path="/users/:id"    element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
         <Route path="/friends"      element={<ProtectedRoute><FriendsPage /></ProtectedRoute>} />
         <Route path="/dm/:userId"   element={<ProtectedRoute><DMPage /></ProtectedRoute>} />
-        <Route path="/leaderboard"  element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
       </Route>
     </Routes>
   );
