@@ -1,5 +1,4 @@
-const path = require('path');
-const fs = require('fs');
+const { cloudinary } = require('../config/cloudinary');
 const User = require('../models/User');
 
 // @desc    Get current user's profile
@@ -25,11 +24,7 @@ exports.updateProfile = async (req, res, next) => {
     const { name, department, interests, bio, avatar } = req.body;
     const user = await User.findById(req.user._id);
 
-    if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: 'User not found' });
-    }
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
     if (name !== undefined) user.name = name;
     if (department !== undefined) user.department = department;
@@ -69,17 +64,13 @@ exports.uploadAvatar = async (req, res, next) => {
     const user = await User.findById(req.user._id);
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
-    // Delete old avatar file if it exists
-    if (user.avatar) {
-      const relativePath = user.avatar.startsWith('http')
-        ? new URL(user.avatar).pathname
-        : user.avatar;
-      const oldPath = path.join(__dirname, '..', relativePath);
-      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+    // Delete old Cloudinary avatar
+    if (user.avatar && user.avatar.includes('cloudinary.com')) {
+      const publicId = user.avatar.split('/').slice(-1)[0].split('.')[0];
+      await cloudinary.uploader.destroy(`clubhub/avatars/${publicId}`).catch(() => {});
     }
 
-    const base = `${req.protocol}://${req.get('host')}`;
-    user.avatar = `${base}/uploads/avatars/${req.file.filename}`;
+    user.avatar = req.file.path;
     await user.save();
 
     res.json({

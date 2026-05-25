@@ -1,22 +1,10 @@
-const path = require('path');
-const fs = require('fs');
 const multer = require('multer');
 const Club = require('../models/Club');
 const User = require('../models/User');
 const Activity = require('../models/Activity');
 const { awardPoints } = require('../services/gamificationService');
+const { cloudinary, coverStorage } = require('../config/cloudinary');
 
-const coverStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = path.join(__dirname, '../uploads/covers');
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    cb(null, `club-${req.params.id}-${Date.now()}${ext}`);
-  },
-});
 exports.uploadCover = multer({
   storage: coverStorage,
   limits: { fileSize: 5 * 1024 * 1024 },
@@ -37,14 +25,13 @@ exports.uploadCoverImage = async (req, res, next) => {
     if (club.admin.toString() !== req.user._id.toString())
       return res.status(403).json({ success: false, message: 'Only the club admin can change the cover' });
 
-    // Delete old cover file if stored locally
-    if (club.coverImage && !club.coverImage.startsWith('http')) {
-      const old = path.join(__dirname, '..', club.coverImage);
-      if (fs.existsSync(old)) fs.unlinkSync(old);
+    // Delete old Cloudinary cover
+    if (club.coverImage && club.coverImage.includes('cloudinary.com')) {
+      const publicId = club.coverImage.split('/').slice(-1)[0].split('.')[0];
+      await cloudinary.uploader.destroy(`clubhub/covers/${publicId}`).catch(() => {});
     }
 
-    const base = `${req.protocol}://${req.get('host')}`;
-    club.coverImage = `${base}/uploads/covers/${req.file.filename}`;
+    club.coverImage = req.file.path;
     await club.save();
 
     res.json({ success: true, coverImage: club.coverImage });
