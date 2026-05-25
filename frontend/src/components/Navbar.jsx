@@ -274,12 +274,25 @@ const Navbar = () => {
 
       {/* Mobile bottom nav */}
       <nav className="flex w-full items-center border-t border-gray-200 md:hidden dark:border-slate-700">
-        <NavLink to="/home" className={navLinkClass + ' flex-1 justify-center'}><Home size={16} /> Home</NavLink>
-        <NavLink to="/clubs" className={navLinkClass + ' flex-1 justify-center'}><Search size={16} /> Clubs</NavLink>
-        {user?.role === 'admin' && (
-          <NavLink to="/admin" className={navLinkClass + ' flex-1 justify-center'}><Shield size={16} /> Admin</NavLink>
-        )}
-        <NavLink to="/profile" className={navLinkClass + ' flex-1 justify-center'}><User size={16} /> Profile</NavLink>
+        {[
+          { to: '/home',    icon: <Home size={20} />,   label: 'Home'    },
+          { to: '/clubs',   icon: <Search size={20} />, label: 'Clubs'   },
+          ...(user?.role === 'admin' ? [{ to: '/admin', icon: <Shield size={20} />, label: 'Admin' }] : []),
+          { to: '/profile', icon: <User size={20} />,   label: 'Profile' },
+        ].map(({ to, icon, label }) => (
+          <NavLink key={to} to={to}
+            className={({ isActive }) =>
+              `flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-semibold transition ${
+                isActive
+                  ? 'text-indigo-600 dark:text-indigo-400'
+                  : 'text-gray-400 hover:text-gray-700 dark:text-slate-500 dark:hover:text-white'
+              }`
+            }
+          >
+            {icon}
+            {label}
+          </NavLink>
+        ))}
       </nav>
     </header>
   );
