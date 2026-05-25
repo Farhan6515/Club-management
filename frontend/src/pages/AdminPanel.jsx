@@ -7,21 +7,15 @@ import { useAuth } from '../context/AuthContext';
 
 const DEPARTMENTS = ['CSE', 'ECE', 'MECH', 'CIVIL', 'IT', 'EEE', 'OTHER'];
 const CATEGORIES = [
-  'Technical',
-  'Cultural',
-  'Sports',
-  'Literary',
-  'Social',
-  'Academic',
-  'Other',
+  'Technical', 'Cultural', 'Sports', 'Literary', 'Social', 'Academic', 'Other',
 ];
 
 const LEVEL_COLOR = {
   Beginner:        'text-slate-400',
-  'Active Member': 'text-green-400',
-  'Pro Member':    'text-blue-400',
-  'Elite Member':  'text-purple-400',
-  Legend:          'text-amber-400',
+  'Active Member': 'text-green-500 dark:text-green-400',
+  'Pro Member':    'text-blue-500 dark:text-blue-400',
+  'Elite Member':  'text-purple-500 dark:text-purple-400',
+  Legend:          'text-amber-500 dark:text-amber-400',
 };
 
 const AnalyticsTab = () => {
@@ -37,81 +31,78 @@ const AnalyticsTab = () => {
 
   if (loading) return (
     <div className="flex justify-center py-16">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-600 border-t-indigo-400" />
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-indigo-500 dark:border-slate-600 dark:border-t-indigo-400" />
     </div>
   );
-  if (!data) return <div className="card p-10 text-center text-slate-500">Could not load analytics</div>;
+  if (!data) return <div className="card p-10 text-center text-gray-400 dark:text-slate-500">Could not load analytics</div>;
 
   return (
     <div className="space-y-6">
-      {/* Summary */}
       <div className="grid gap-4 sm:grid-cols-3">
         {[
-          { label: 'Total Users',      value: data.stats.totalUsers,      icon: <Users size={18} className="text-indigo-400" /> },
-          { label: 'Total Clubs',      value: data.stats.totalClubs,      icon: <Trophy size={18} className="text-amber-400" /> },
-          { label: 'Total Activities', value: data.stats.totalActivities, icon: <BarChart2 size={18} className="text-emerald-400" /> },
+          { label: 'Total Users',      value: data.stats.totalUsers,      icon: <Users size={18} className="text-indigo-500 dark:text-indigo-400" /> },
+          { label: 'Total Clubs',      value: data.stats.totalClubs,      icon: <Trophy size={18} className="text-amber-500 dark:text-amber-400" /> },
+          { label: 'Total Activities', value: data.stats.totalActivities, icon: <BarChart2 size={18} className="text-emerald-500 dark:text-emerald-400" /> },
         ].map(({ label, value, icon }) => (
           <div key={label} className="card flex items-center gap-4 p-5">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-700">{icon}</div>
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 dark:bg-slate-700">{icon}</div>
             <div>
-              <p className="text-xl font-bold text-white">{value}</p>
-              <p className="text-xs text-slate-400">{label}</p>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">{value}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400">{label}</p>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Top users */}
       <div className="card p-5">
-        <h3 className="mb-4 flex items-center gap-2 text-sm font-bold text-white">
-          <Star size={15} className="text-amber-400" /> Top Users by Points
+        <h3 className="mb-4 flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white">
+          <Star size={15} className="text-amber-500 dark:text-amber-400" /> Top Users by Points
         </h3>
         <div className="space-y-2">
           {data.topUsers.map((u, i) => (
-            <div key={u.user?._id || i} className="flex items-center gap-3 rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2">
-              <span className="w-5 shrink-0 text-center text-xs font-bold text-slate-500">#{i + 1}</span>
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-sm font-bold text-indigo-400 overflow-hidden">
+            <div key={u.user?._id || i} className="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800/50">
+              <span className="w-5 shrink-0 text-center text-xs font-bold text-gray-400 dark:text-slate-500">#{i + 1}</span>
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-600 overflow-hidden dark:bg-indigo-500/20 dark:text-indigo-400">
                 {u.user?.avatar
                   ? <img src={u.user.avatar} alt={u.user.name} className="h-full w-full object-cover" />
                   : u.user?.name?.charAt(0).toUpperCase()
                 }
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-white">{u.user?.name}</p>
-                <p className={`text-xs ${LEVEL_COLOR[u.level] || 'text-slate-400'}`}>{u.level}</p>
+                <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{u.user?.name}</p>
+                <p className={`text-xs ${LEVEL_COLOR[u.level] || 'text-gray-400 dark:text-slate-400'}`}>{u.level}</p>
               </div>
               <div className="shrink-0 text-right">
-                <p className="text-sm font-bold text-amber-400">{u.points.toLocaleString()}</p>
-                <p className="text-xs text-slate-500">{u.badges} badges</p>
+                <p className="text-sm font-bold text-amber-500 dark:text-amber-400">{u.points.toLocaleString()}</p>
+                <p className="text-xs text-gray-400 dark:text-slate-500">{u.badges} badges</p>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Top clubs by activity */}
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="card p-5">
-          <h3 className="mb-4 text-sm font-bold text-white">Most Active Clubs</h3>
+          <h3 className="mb-4 text-sm font-bold text-gray-900 dark:text-white">Most Active Clubs</h3>
           <div className="space-y-2">
             {data.topClubs.map((c, i) => (
-              <div key={c._id || i} className="flex items-center justify-between gap-2 rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2">
-                <span className="text-sm font-medium text-white truncate">{c.name}</span>
-                <span className="shrink-0 text-sm font-bold text-indigo-400">{c.count} posts</span>
+              <div key={c._id || i} className="flex items-center justify-between gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800/50">
+                <span className="text-sm font-medium text-gray-800 truncate dark:text-white">{c.name}</span>
+                <span className="shrink-0 text-sm font-bold text-indigo-600 dark:text-indigo-400">{c.count} posts</span>
               </div>
             ))}
           </div>
         </div>
 
         <div className="card p-5">
-          <h3 className="mb-4 text-sm font-bold text-white">Engagement by Department</h3>
+          <h3 className="mb-4 text-sm font-bold text-gray-900 dark:text-white">Engagement by Department</h3>
           <div className="space-y-2">
             {data.deptEngagement.map((d, i) => (
-              <div key={d._id || i} className="flex items-center justify-between gap-2 rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2">
-                <span className="text-sm font-medium text-white">{d._id || 'Unknown'}</span>
+              <div key={d._id || i} className="flex items-center justify-between gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800/50">
+                <span className="text-sm font-medium text-gray-800 dark:text-white">{d._id || 'Unknown'}</span>
                 <div className="text-right">
-                  <p className="text-sm font-bold text-emerald-400">{d.totalPoints.toLocaleString()} pts</p>
-                  <p className="text-xs text-slate-500">{d.count} users</p>
+                  <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{d.totalPoints.toLocaleString()} pts</p>
+                  <p className="text-xs text-gray-400 dark:text-slate-500">{d.count} users</p>
                 </div>
               </div>
             ))}
@@ -137,9 +128,7 @@ const AdminPanel = () => {
     tags: '',
   });
 
-  useEffect(() => {
-    loadClubs();
-  }, []);
+  useEffect(() => { loadClubs(); }, []);
 
   const loadClubs = async () => {
     setLoading(true);
@@ -162,20 +151,11 @@ const AdminPanel = () => {
         description: form.description,
         department: form.department,
         category: form.category,
-        tags: form.tags
-          .split(',')
-          .map((t) => t.trim().toLowerCase())
-          .filter(Boolean),
+        tags: form.tags.split(',').map((t) => t.trim().toLowerCase()).filter(Boolean),
       };
       await api.post('/clubs', payload);
       toast.success('Club created!');
-      setForm({
-        name: '',
-        description: '',
-        department: user?.department || 'CSE',
-        category: 'Technical',
-        tags: '',
-      });
+      setForm({ name: '', description: '', department: user?.department || 'CSE', category: 'Technical', tags: '' });
       setShowForm(false);
       loadClubs();
     } catch (err) {
@@ -200,8 +180,8 @@ const AdminPanel = () => {
     <div className="space-y-6">
       <header className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-3xl font-bold text-white">Admin Panel</h1>
-          <p className="mt-1 text-slate-400">Manage your clubs and view analytics</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Admin Panel</h1>
+          <p className="mt-1 text-gray-500 dark:text-slate-400">Manage your clubs and view analytics</p>
         </div>
         <div className="flex items-center gap-3">
           {adminTab === 'clubs' && (
@@ -217,13 +197,17 @@ const AdminPanel = () => {
       </header>
 
       {/* Tab switcher */}
-      <div className="flex gap-1 rounded-xl border border-slate-700 bg-slate-800 p-1 w-fit">
+      <div className="flex gap-1 rounded-xl border border-gray-200 bg-gray-100 p-1 w-fit dark:border-slate-700 dark:bg-slate-800">
         {[
           { key: 'clubs',     label: 'My Clubs',  icon: <Settings size={14} /> },
           { key: 'analytics', label: 'Analytics', icon: <BarChart2 size={14} /> },
         ].map(t => (
           <button key={t.key} onClick={() => setAdminTab(t.key)}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition ${adminTab === t.key ? 'bg-indigo-500/20 text-indigo-400' : 'text-slate-400 hover:text-white'}`}>
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition ${
+              adminTab === t.key
+                ? 'bg-indigo-500/20 text-indigo-600 dark:text-indigo-400'
+                : 'text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white'
+            }`}>
             {t.icon}{t.label}
           </button>
         ))}
@@ -232,100 +216,98 @@ const AdminPanel = () => {
       {adminTab === 'analytics' && <AnalyticsTab />}
 
       {adminTab === 'clubs' && <>
-
-
-      {!user?.departmentId && (
-        <div className="card border-2 border-dashed border-amber-500/30 bg-amber-500/5 p-6 text-center">
-          <h3 className="font-semibold text-white">Department ID required</h3>
-          <p className="mt-1 text-sm text-slate-400">
-            You need a valid Department ID to create or manage clubs.{' '}
-            <Link to="/profile" className="font-semibold text-amber-400 hover:text-amber-300">Add yours on the profile page.</Link>
-          </p>
-        </div>
-      )}
-
-      {/* Create form */}
-      {showForm && user?.departmentId && (
-        <form onSubmit={handleCreate} className="card space-y-4 p-5 sm:p-6">
-          <h2 className="text-lg font-bold text-white">Create new club</h2>
-
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-300">Name</label>
-            <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="input-field" placeholder="e.g. Photography Society" />
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-300">Description</label>
-            <textarea required rows={3} value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-              className="input-field resize-none" placeholder="What's this club about?" />
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-300">Department</label>
-              <select value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} className="input-field">
-                {DEPARTMENTS.map((d) => <option key={d} value={d}>{d}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-300">Category</label>
-              <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="input-field">
-                {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-300">Tags</label>
-            <input type="text" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })}
-              className="input-field" placeholder="photography, art, creative (comma separated)" />
-          </div>
-
-          <button type="submit" disabled={creating} className="btn-primary w-full sm:w-auto">
-            {creating ? 'Creating…' : 'Create Club'}
-          </button>
-        </form>
-      )}
-
-      {/* Clubs list */}
-      <div>
-        <h2 className="mb-4 text-xl font-bold text-white">Clubs you administer</h2>
-
-        {loading ? (
-          <div className="flex justify-center py-10">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-700 border-t-indigo-500" />
-          </div>
-        ) : clubs.length === 0 ? (
-          <div className="card p-10 text-center text-slate-500">You haven't created any clubs yet</div>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2">
-            {clubs.map((club) => (
-              <div key={club._id} className="card p-5">
-                <h3 className="font-bold text-white">{club.name}</h3>
-                <p className="mt-1 line-clamp-2 text-sm text-slate-400">{club.description}</p>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  <span className="badge bg-slate-700 text-slate-300">{club.department}</span>
-                  <span className="badge bg-indigo-500/20 text-indigo-400">{club.category}</span>
-                  <span className="badge bg-emerald-500/20 text-emerald-400">
-                    <Users size={10} className="mr-1" />{club.members?.length || 0}
-                  </span>
-                </div>
-                <div className="mt-4 flex gap-2 border-t border-slate-700 pt-4">
-                  <Link to={`/admin/clubs/${club._id}`} className="btn-secondary flex-1 text-center">
-                    <Settings size={14} /> Manage
-                  </Link>
-                  <button onClick={() => handleDelete(club._id, club.name)}
-                    className="rounded-lg border border-slate-700 px-3 py-2 text-slate-500 hover:border-red-500/50 hover:text-red-400 transition">
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              </div>
-            ))}
+        {!user?.departmentId && (
+          <div className="card border-2 border-dashed border-amber-400/40 bg-amber-50 p-6 text-center dark:border-amber-500/30 dark:bg-amber-500/5">
+            <h3 className="font-semibold text-gray-900 dark:text-white">Department ID required</h3>
+            <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">
+              You need a valid Department ID to create or manage clubs.{' '}
+              <Link to="/profile" className="font-semibold text-amber-500 hover:text-amber-600 dark:text-amber-400 dark:hover:text-amber-300">
+                Add yours on the profile page.
+              </Link>
+            </p>
           </div>
         )}
-      </div>
+
+        {showForm && user?.departmentId && (
+          <form onSubmit={handleCreate} className="card space-y-4 p-5 sm:p-6">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Create new club</h2>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-slate-300">Name</label>
+              <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="input-field" placeholder="e.g. Photography Society" />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-slate-300">Description</label>
+              <textarea required rows={3} value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                className="input-field resize-none" placeholder="What's this club about?" />
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-slate-300">Department</label>
+                <select value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} className="input-field">
+                  {DEPARTMENTS.map((d) => <option key={d} value={d}>{d}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-slate-300">Category</label>
+                <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="input-field">
+                  {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-slate-300">Tags</label>
+              <input type="text" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })}
+                className="input-field" placeholder="photography, art, creative (comma separated)" />
+            </div>
+
+            <button type="submit" disabled={creating} className="btn-primary w-full sm:w-auto">
+              {creating ? 'Creating…' : 'Create Club'}
+            </button>
+          </form>
+        )}
+
+        <div>
+          <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">Clubs you administer</h2>
+
+          {loading ? (
+            <div className="flex justify-center py-10">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-indigo-500 dark:border-slate-700 dark:border-t-indigo-500" />
+            </div>
+          ) : clubs.length === 0 ? (
+            <div className="card p-10 text-center text-gray-400 dark:text-slate-500">You haven't created any clubs yet</div>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2">
+              {clubs.map((club) => (
+                <div key={club._id} className="card p-5">
+                  <h3 className="font-bold text-gray-900 dark:text-white">{club.name}</h3>
+                  <p className="mt-1 line-clamp-2 text-sm text-gray-500 dark:text-slate-400">{club.description}</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    <span className="badge bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-300">{club.department}</span>
+                    <span className="badge bg-indigo-50 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400">{club.category}</span>
+                    <span className="badge bg-emerald-50 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+                      <Users size={10} className="mr-1" />{club.members?.length || 0}
+                    </span>
+                  </div>
+                  <div className="mt-4 flex gap-2 border-t border-gray-100 pt-4 dark:border-slate-700">
+                    <Link to={`/admin/clubs/${club._id}`} className="btn-secondary flex-1 text-center">
+                      <Settings size={14} /> Manage
+                    </Link>
+                    <button onClick={() => handleDelete(club._id, club.name)}
+                      className="rounded-lg border border-gray-200 px-3 py-2 text-gray-400 hover:border-red-300 hover:text-red-500 transition dark:border-slate-700 dark:text-slate-500 dark:hover:border-red-500/50 dark:hover:text-red-400">
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </>}
     </div>
   );

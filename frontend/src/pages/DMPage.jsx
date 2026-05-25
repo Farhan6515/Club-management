@@ -26,7 +26,6 @@ const DMPage = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    // Load profile + history
     Promise.all([
       api.get(`/friends/users/${userId}`),
       api.get(`/dm/${userId}`),
@@ -35,7 +34,6 @@ const DMPage = () => {
       setMessages(dmRes.data.messages);
     }).catch(() => toast.error('Failed to load conversation'));
 
-    // Socket
     sock = io(import.meta.env.VITE_API_URL, { auth: { token }, transports: ['websocket'] });
     sock.on('connect',    () => { setConnected(true); sock.emit('join-dm', roomId); });
     sock.on('disconnect', () => setConnected(false));
@@ -66,40 +64,40 @@ const DMPage = () => {
          style={{ height: 'calc(100vh - 3.75rem)' }}>
 
       {/* Top bar */}
-      <div className="flex shrink-0 items-center gap-3 border-b border-slate-700 bg-slate-900 px-4 py-2.5">
-        <Link to="/friends" className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-700 hover:text-white transition">
+      <div className="flex shrink-0 items-center gap-3 border-b border-gray-200 bg-white px-4 py-2.5 dark:border-slate-700 dark:bg-slate-900">
+        <Link to="/friends" className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white">
           <ArrowLeft size={18} />
         </Link>
         {otherUser && (
           <>
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-500/20 font-bold text-indigo-400 border border-indigo-500/30">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 font-bold text-indigo-600 border border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-400 dark:border-indigo-500/30">
               {otherUser.name?.charAt(0).toUpperCase()}
             </div>
             <div>
-              <p className="text-sm font-bold text-white">{otherUser.name}</p>
-              <p className="text-xs text-slate-500">{otherUser.department}</p>
+              <p className="text-sm font-bold text-gray-900 dark:text-white">{otherUser.name}</p>
+              <p className="text-xs text-gray-400 dark:text-slate-500">{otherUser.department}</p>
             </div>
           </>
         )}
-        <span className={`ml-auto flex items-center gap-1.5 text-xs ${connected ? 'text-emerald-400' : 'text-slate-500'}`}>
-          <span className={`h-1.5 w-1.5 rounded-full ${connected ? 'bg-emerald-400' : 'bg-slate-500'}`} />
+        <span className={`ml-auto flex items-center gap-1.5 text-xs ${connected ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-400 dark:text-slate-500'}`}>
+          <span className={`h-1.5 w-1.5 rounded-full ${connected ? 'bg-emerald-500 dark:bg-emerald-400' : 'bg-gray-300 dark:bg-slate-500'}`} />
           {connected ? 'Online' : 'Connecting…'}
         </span>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3 space-y-1">
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3 space-y-1 bg-gray-50 dark:bg-slate-900">
         {messages.length === 0 && (
-          <p className="py-16 text-center text-sm text-slate-500">
+          <p className="py-16 text-center text-sm text-gray-400 dark:text-slate-500">
             No messages yet. Say hello to {otherUser?.name}!
           </p>
         )}
         {Object.entries(grouped).map(([day, msgs]) => (
           <div key={day}>
             <div className="my-3 flex items-center gap-3">
-              <div className="h-px flex-1 bg-slate-700" />
-              <span className="text-xs text-slate-500">{day}</span>
-              <div className="h-px flex-1 bg-slate-700" />
+              <div className="h-px flex-1 bg-gray-200 dark:bg-slate-700" />
+              <span className="text-xs text-gray-400 dark:text-slate-500">{day}</span>
+              <div className="h-px flex-1 bg-gray-200 dark:bg-slate-700" />
             </div>
             {msgs.map((msg, i) => {
               const isOwn   = msg.sender?._id === me?._id || msg.sender === me?._id;
@@ -107,15 +105,19 @@ const DMPage = () => {
               return (
                 <div key={msg._id || i} className={`flex items-end gap-2 ${isOwn ? 'flex-row-reverse' : ''} ${prevSame ? 'mt-0.5' : 'mt-3'}`}>
                   {!isOwn && (
-                    <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-xs font-bold text-indigo-400 ${prevSame ? 'invisible' : ''}`}>
+                    <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 ${prevSame ? 'invisible' : ''}`}>
                       {(msg.sender?.name || otherUser?.name)?.charAt(0).toUpperCase()}
                     </div>
                   )}
                   <div className={`flex flex-col max-w-[72%] ${isOwn ? 'items-end' : 'items-start'}`}>
-                    <div className={`rounded-2xl px-3 py-2 text-sm leading-relaxed ${isOwn ? 'rounded-br-sm bg-indigo-600 text-white' : 'rounded-bl-sm bg-slate-700 text-slate-200'}`}>
+                    <div className={`rounded-2xl px-3 py-2 text-sm leading-relaxed ${
+                      isOwn
+                        ? 'rounded-br-sm bg-indigo-600 text-white'
+                        : 'rounded-bl-sm bg-white text-gray-800 shadow-sm border border-gray-100 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600'
+                    }`}>
                       {msg.content}
                     </div>
-                    <span className="mt-0.5 px-1 text-xs text-slate-500">{formatTime(msg.createdAt)}</span>
+                    <span className="mt-0.5 px-1 text-xs text-gray-400 dark:text-slate-500">{formatTime(msg.createdAt)}</span>
                   </div>
                 </div>
               );
@@ -126,13 +128,13 @@ const DMPage = () => {
       </div>
 
       {/* Input */}
-      <form onSubmit={send} className="flex shrink-0 items-center gap-2 border-t border-slate-700 px-3 py-3">
+      <form onSubmit={send} className="flex shrink-0 items-center gap-2 border-t border-gray-200 bg-white px-3 py-3 dark:border-slate-700 dark:bg-slate-900">
         <input
           ref={inputRef}
           value={input}
           onChange={e => setInput(e.target.value)}
           placeholder={`Message ${otherUser?.name || ''}…`}
-          className="flex-1 rounded-full border border-slate-600 bg-slate-700 px-4 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+          className="flex-1 rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500 dark:focus:border-indigo-500"
         />
         <button type="submit" disabled={!input.trim() || !connected}
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-500 text-white transition hover:bg-indigo-600 disabled:opacity-40">

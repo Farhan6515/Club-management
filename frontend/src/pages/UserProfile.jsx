@@ -49,10 +49,12 @@ const UserProfile = () => {
 
   if (loading) return (
     <div className="flex justify-center py-20">
-      <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-700 border-t-amber-400" />
+      <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-amber-400 dark:border-slate-700" />
     </div>
   );
-  if (!profile) return <div className="card p-10 text-center text-slate-400">User not found</div>;
+  if (!profile) return (
+    <div className="card p-10 text-center text-gray-400 dark:text-slate-400">User not found</div>
+  );
 
   return (
     <div className="mx-auto max-w-2xl space-y-5">
@@ -61,58 +63,58 @@ const UserProfile = () => {
         <div className="h-24 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600" />
         <div className="px-6 pb-6">
           <div className="-mt-10 flex items-end justify-between gap-4">
-            <div className="flex h-20 w-20 items-center justify-center rounded-2xl border-4 border-slate-800 bg-indigo-500/20 text-3xl font-extrabold text-indigo-400 overflow-hidden">
+            <div className="flex h-20 w-20 items-center justify-center rounded-2xl border-4 border-white bg-indigo-100 text-3xl font-extrabold text-indigo-600 overflow-hidden dark:border-slate-800 dark:bg-indigo-500/20 dark:text-indigo-400">
               {profile.avatar
                 ? <img src={getAvatarUrl(profile.avatar)} alt={profile.name} className="h-full w-full object-cover" />
                 : profile.name?.charAt(0).toUpperCase()
               }
             </div>
 
-            {/* Action buttons */}
             <div className="flex gap-2 pb-1">
               {relation.isFriend ? (
                 <>
                   <Link to={`/dm/${id}`}
-                    className="flex items-center gap-1.5 rounded-lg bg-indigo-500/20 px-3 py-2 text-sm font-semibold text-indigo-400 transition hover:bg-indigo-500/30 sm:px-4">
+                    className="flex items-center gap-1.5 rounded-lg bg-indigo-100 px-3 py-2 text-sm font-semibold text-indigo-600 transition hover:bg-indigo-200 sm:px-4 dark:bg-indigo-500/20 dark:text-indigo-400 dark:hover:bg-indigo-500/30">
                     <MessageSquare size={15} /> <span className="hidden sm:inline">Message</span>
                   </Link>
                   <button onClick={() => act('remove')} disabled={acting}
-                    className="flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold text-slate-400 transition hover:border-red-500/50 hover:text-red-400 sm:px-4">
+                    className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-500 transition hover:border-red-300 hover:text-red-500 sm:px-4 dark:border-slate-700 dark:text-slate-400 dark:hover:border-red-500/50 dark:hover:text-red-400">
                     <UserX size={15} /> <span className="hidden sm:inline">Remove</span>
                   </button>
                 </>
               ) : relation.requestRecvd ? (
                 <>
                   <button onClick={() => act('accept')} disabled={acting}
-                    className="flex items-center gap-1.5 rounded-lg bg-emerald-500/20 px-3 py-2 text-sm font-semibold text-emerald-400 transition hover:bg-emerald-500/30 sm:px-4">
+                    className="flex items-center gap-1.5 rounded-lg bg-emerald-100 px-3 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-200 sm:px-4 dark:bg-emerald-500/20 dark:text-emerald-400 dark:hover:bg-emerald-500/30">
                     <UserCheck size={15} /> <span className="hidden sm:inline">Accept</span>
                   </button>
                   <button onClick={() => act('reject')} disabled={acting}
-                    className="flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold text-slate-400 transition hover:text-red-400 sm:px-4">
+                    className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-500 transition hover:text-red-500 sm:px-4 dark:border-slate-700 dark:text-slate-400 dark:hover:text-red-400">
                     <UserX size={15} /> <span className="hidden sm:inline">Reject</span>
                   </button>
                 </>
               ) : relation.requestSent ? (
-                <button disabled className="flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold text-slate-500 cursor-not-allowed sm:px-4">
+                <button disabled
+                  className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-400 cursor-not-allowed sm:px-4 dark:border-slate-700 dark:text-slate-500">
                   <Clock size={15} /> <span className="hidden sm:inline">Request Sent</span>
                 </button>
               ) : (
                 <button onClick={() => act('send')} disabled={acting}
-                  className="flex items-center gap-1.5 rounded-lg bg-amber-400/20 px-3 py-2 text-sm font-semibold text-amber-400 transition hover:bg-amber-400/30 sm:px-4">
+                  className="flex items-center gap-1.5 rounded-lg bg-amber-100 px-3 py-2 text-sm font-semibold text-amber-700 transition hover:bg-amber-200 sm:px-4 dark:bg-amber-400/20 dark:text-amber-400 dark:hover:bg-amber-400/30">
                   <UserPlus size={15} /> <span className="hidden sm:inline">Add Friend</span>
                 </button>
               )}
             </div>
           </div>
 
-          <h1 className="mt-3 text-2xl font-extrabold text-white">{profile.name}</h1>
-          <p className="text-sm text-slate-400">{profile.department} · {profile.friendCount} friends</p>
-          {profile.bio && <p className="mt-3 text-sm text-slate-400">{profile.bio}</p>}
+          <h1 className="mt-3 text-2xl font-extrabold text-gray-900 dark:text-white">{profile.name}</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400">{profile.department} · {profile.friendCount} friends</p>
+          {profile.bio && <p className="mt-3 text-sm text-gray-600 dark:text-slate-400">{profile.bio}</p>}
 
           {profile.interests?.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-1.5">
               {profile.interests.map(i => (
-                <span key={i} className="rounded-full bg-slate-700 px-3 py-0.5 text-xs text-slate-300">
+                <span key={i} className="rounded-full bg-gray-100 px-3 py-0.5 text-xs text-gray-600 dark:bg-slate-700 dark:text-slate-300">
                   {i}
                 </span>
               ))}
@@ -124,15 +126,15 @@ const UserProfile = () => {
       {/* Clubs */}
       {profile.joinedClubs?.length > 0 && (
         <div className="card p-5">
-          <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-white">
-            <Users size={15} className="text-indigo-400" /> Clubs
+          <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white">
+            <Users size={15} className="text-indigo-500 dark:text-indigo-400" /> Clubs
           </h2>
           <div className="flex flex-wrap gap-2">
             {profile.joinedClubs.map(club => (
               <Link
                 key={club._id}
                 to={`/clubs/${club._id}`}
-                className="rounded-lg border border-slate-700 bg-slate-700/50 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:border-indigo-500/50 hover:text-white"
+                className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-700 dark:bg-slate-700/50 dark:text-slate-300 dark:hover:border-indigo-500/50 dark:hover:text-white"
               >
                 {club.name}
               </Link>

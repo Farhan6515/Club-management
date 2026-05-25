@@ -41,15 +41,14 @@ const Clubs = () => {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold text-white sm:text-3xl">Discover Clubs</h1>
-        <p className="mt-1 text-slate-400">Find communities that match your interests</p>
+        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">Discover Clubs</h1>
+        <p className="mt-1 text-gray-500 dark:text-slate-400">Find communities that match your interests</p>
       </header>
 
-      {/* Search & Filters */}
       <div className="card p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-400" />
             <input
               type="text"
               placeholder="Search by name, description, or tag…"
@@ -67,27 +66,26 @@ const Clubs = () => {
             {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
           {hasFilters && (
-            <button onClick={clearFilters} className="flex items-center gap-1 text-sm font-medium text-slate-400 hover:text-white transition">
+            <button onClick={clearFilters} className="flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 transition dark:text-slate-400 dark:hover:text-white">
               <X size={16} /> Clear
             </button>
           )}
         </div>
       </div>
 
-      {/* Results */}
       {loading ? (
         <div className="flex justify-center py-20">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-700 border-t-indigo-500" />
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-indigo-500 dark:border-slate-700 dark:border-t-indigo-500" />
         </div>
       ) : clubs.length === 0 ? (
         <div className="card p-10 text-center">
-          <h3 className="text-base font-semibold text-white">No clubs found</h3>
-          <p className="mt-1 text-sm text-slate-400">Try adjusting your filters or search query</p>
+          <h3 className="text-base font-semibold text-gray-900 dark:text-white">No clubs found</h3>
+          <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">Try adjusting your filters or search query</p>
         </div>
       ) : (
         <>
-          <p className="text-sm text-slate-400">
-            Showing <strong className="text-white">{clubs.length}</strong>{' '}
+          <p className="text-sm text-gray-500 dark:text-slate-400">
+            Showing <strong className="text-gray-900 dark:text-white">{clubs.length}</strong>{' '}
             {clubs.length === 1 ? 'club' : 'clubs'}
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
