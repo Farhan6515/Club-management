@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
   Home, Search, User, LogOut, Shield, Users,
-  Bell, UserCheck, UserX, MessageSquare, Newspaper,
+  Bell, UserCheck, UserX, MessageSquare, Newspaper, Sun, Moon,
 } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
@@ -162,6 +163,7 @@ const LEVEL_COLOR = {
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { dark, toggle: toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [notifCount, setNotifCount] = useState(0);
   const [showNotif, setShowNotif] = useState(false);
@@ -192,18 +194,20 @@ const Navbar = () => {
 
   const navLinkClass = ({ isActive }) =>
     `flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-semibold transition sm:px-3 sm:text-sm ${
-      isActive ? 'bg-indigo-500/20 text-indigo-400' : 'text-slate-400 hover:bg-slate-700 hover:text-white'
+      isActive
+        ? 'bg-indigo-500/20 text-indigo-600 dark:text-indigo-400'
+        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white'
     }`;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-700 bg-slate-900/90 backdrop-blur-md shadow-lg">
+    <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/90 backdrop-blur-md shadow-sm dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-lg">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link to="/home" className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow">
             <Users size={20} />
           </div>
-          <span className="text-lg font-extrabold tracking-tight text-white">
+          <span className="text-lg font-extrabold tracking-tight text-gray-900 dark:text-white">
             Club<span className="text-amber-400">Hub</span>
           </span>
         </Link>
@@ -221,8 +225,8 @@ const Navbar = () => {
         {/* Right side */}
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="hidden text-right sm:block">
-            <p className="text-sm font-semibold text-white">{user?.name}</p>
-            <p className="text-xs text-slate-400">
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">{user?.name}</p>
+            <p className="text-xs text-gray-500 dark:text-slate-400">
               {user?.department}
               {levelName && <span className={`ml-1.5 font-medium ${LEVEL_COLOR[levelName] || 'text-slate-400'}`}>· {levelName}</span>}
             </p>
@@ -233,6 +237,15 @@ const Navbar = () => {
               : user?.name?.charAt(0).toUpperCase()
             }
           </div>
+
+          {/* Theme toggle */}
+          <button
+            onClick={toggleTheme}
+            className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
+            title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {dark ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
 
           {/* Bell */}
           <div className="relative">
@@ -252,7 +265,7 @@ const Navbar = () => {
           </div>
 
           <button onClick={handleLogout}
-            className="rounded-lg p-2 text-slate-400 hover:bg-slate-700 hover:text-red-400 transition"
+            className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-red-500 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-red-400"
             title="Logout">
             <LogOut size={18} />
           </button>
@@ -260,7 +273,7 @@ const Navbar = () => {
       </div>
 
       {/* Mobile bottom nav */}
-      <nav className="flex items-center overflow-x-auto border-t border-slate-700 px-1 py-1 md:hidden scrollbar-hide">
+      <nav className="flex items-center overflow-x-auto border-t border-gray-200 px-1 py-1 md:hidden scrollbar-hide dark:border-slate-700">
         <NavLink to="/home" className={navLinkClass}><Home size={16} /> Home</NavLink>
         <NavLink to="/clubs" className={navLinkClass}><Search size={16} /> Clubs</NavLink>
         {user?.role === 'admin' && (
