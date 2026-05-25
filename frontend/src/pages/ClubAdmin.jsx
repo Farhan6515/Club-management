@@ -10,6 +10,7 @@ import {
   Save,
   X,
   Award,
+  ImagePlus,
 } from 'lucide-react';
 
 const POSITIONS = ['President', 'Vice President', 'Secretary', 'Treasurer', 'Event Coordinator', 'Media Head', 'Technical Lead'];
@@ -48,6 +49,8 @@ const ClubAdmin = () => {
     eventDate: '',
     eventLocation: '',
   });
+  const [mediaFiles, setMediaFiles] = useState([]);
+  const [mediaPreviews, setMediaPreviews] = useState([]);
 
   useEffect(() => {
     loadAll();
@@ -98,26 +101,47 @@ const ClubAdmin = () => {
     }
   };
 
+  const handleMediaChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length + mediaFiles.length > 5) {
+      toast.error('Max 5 files per post');
+      return;
+    }
+    setMediaFiles(prev => [...prev, ...files]);
+    const previews = files.map(f => ({ url: URL.createObjectURL(f), type: f.type.startsWith('video/') ? 'video' : 'image' }));
+    setMediaPreviews(prev => [...prev, ...previews]);
+  };
+
+  const removeMedia = (i) => {
+    URL.revokeObjectURL(mediaPreviews[i].url);
+    setMediaFiles(prev => prev.filter((_, idx) => idx !== i));
+    setMediaPreviews(prev => prev.filter((_, idx) => idx !== i));
+  };
+
   const handlePostActivity = async (e) => {
     e.preventDefault();
     setPosting(true);
     try {
-      const payload = { ...activityForm };
-      if (payload.type !== 'event') {
-        delete payload.eventDate;
-        delete payload.eventLocation;
+      const formData = new FormData();
+      formData.append('type', activityForm.type);
+      formData.append('title', activityForm.title);
+      formData.append('content', activityForm.content);
+      if (activityForm.type === 'event') {
+        formData.append('eventDate', activityForm.eventDate);
+        formData.append('eventLocation', activityForm.eventLocation);
       }
-      const { data } = await api.post(`/activities/club/${id}`, payload);
+      mediaFiles.forEach(f => formData.append('media', f));
+
+      const { data } = await api.post(`/activities/club/${id}`, formData, {
+        headers: { 'Content-Type': undefined },
+      });
       setActivities([data.activity, ...activities]);
       toast.success('Posted!');
       showPointsToast(data.pointsInfo);
-      setActivityForm({
-        type: 'announcement',
-        title: '',
-        content: '',
-        eventDate: '',
-        eventLocation: '',
-      });
+      setActivityForm({ type: 'announcement', title: '', content: '', eventDate: '', eventLocation: '' });
+      mediaPreviews.forEach(p => URL.revokeObjectURL(p.url));
+      setMediaFiles([]);
+      setMediaPreviews([]);
       setShowActivityForm(false);
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to post');
@@ -340,9 +364,35 @@ const ClubAdmin = () => {
                 </div>
               )}
 
-              <button type="submit" disabled={posting} className="btn-primary">
-                <Send size={14} /> {posting ? 'Posting...' : 'Post'}
-              </button>
+              {/* Media previews */}
+              {mediaPreviews.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {mediaPreviews.map((p, i) => (
+                    <div key={i} className="relative h-20 w-20 rounded-lg overflow-hidden border border-slate-600">
+                      {p.type === 'video'
+                        ? <video src={p.url} className="h-full w-full object-cover" />
+                        : <img src={p.url} className="h-full w-full object-cover" />
+                      }
+                      <button type="button" onClick={() => removeMedia(i)}
+                        className="absolute top-0.5 right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-white hover:bg-red-500 transition">
+                        <X size={10} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex items-center gap-2">
+                <label className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-600 bg-slate-700 px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-600 transition">
+                  <ImagePlus size={15} />
+                  {mediaFiles.length > 0 ? `${mediaFiles.length} file${mediaFiles.length > 1 ? 's' : ''} selected` : 'Add Photos/Videos'}
+                  <input type="file" accept="image/*,video/*" multiple className="hidden" onChange={handleMediaChange} />
+                </label>
+                <span className="text-xs text-slate-500">Max 5 files · 50 MB each</span>
+                <button type="submit" disabled={posting} className="btn-primary ml-auto">
+                  <Send size={14} /> {posting ? 'Posting...' : 'Post'}
+                </button>
+              </div>
             </form>
           )}
 
