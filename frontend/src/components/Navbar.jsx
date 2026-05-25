@@ -7,6 +7,7 @@ import {
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
+import { getAvatarUrl } from '../utils/mediaUrl';
 
 const timeAgo = (date) => {
   const s = Math.floor((Date.now() - new Date(date)) / 1000);
@@ -80,7 +81,7 @@ const NotificationDropdown = ({ onClose }) => {
               <div key={r._id} className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800 transition">
                 <Link to={`/users/${r.from._id}`} onClick={onClose}
                   className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-sm font-bold text-amber-400 overflow-hidden">
-                  {r.from.avatar ? <img src={r.from.avatar} alt={r.from.name} className="h-full w-full object-cover" /> : r.from.name?.charAt(0).toUpperCase()}
+                  {r.from.avatar ? <img src={getAvatarUrl(r.from.avatar)} alt={r.from.name} className="h-full w-full object-cover" /> : r.from.name?.charAt(0).toUpperCase()}
                 </Link>
                 <div className="flex-1 min-w-0">
                   <p className="truncate text-sm font-semibold text-white">{r.from.name}</p>
@@ -111,7 +112,7 @@ const NotificationDropdown = ({ onClose }) => {
               <Link key={c._id} to={`/dm/${c.other?._id}`} onClick={onClose}
                 className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800 transition">
                 <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-sm font-bold text-indigo-400 overflow-hidden">
-                  {c.other?.avatar ? <img src={c.other.avatar} alt={c.other.name} className="h-full w-full object-cover" /> : c.other?.name?.charAt(0).toUpperCase()}
+                  {c.other?.avatar ? <img src={getAvatarUrl(c.other.avatar)} alt={c.other.name} className="h-full w-full object-cover" /> : c.other?.name?.charAt(0).toUpperCase()}
                   <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-bold text-white">{c.unread}</span>
                 </div>
                 <div className="flex-1 min-w-0">
@@ -229,7 +230,7 @@ const Navbar = () => {
           </div>
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 font-bold text-indigo-400 border border-indigo-500/30 overflow-hidden">
             {user?.avatar
-              ? <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+              ? <img src={getAvatarUrl(user.avatar)} alt={user.name} className="h-full w-full object-cover" />
               : user?.name?.charAt(0).toUpperCase()
             }
           </div>

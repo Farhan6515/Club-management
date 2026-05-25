@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import ClubCard from '../components/ClubCard';
+import { getAvatarUrl } from '../utils/mediaUrl';
 
 const DEPARTMENTS = ['CSE', 'ECE', 'MECH', 'CIVIL', 'IT', 'EEE', 'OTHER'];
 
@@ -93,7 +94,7 @@ const ProfileTab = ({ user, updateUser, clubs }) => {
                 title="Change photo"
               >
                 {user?.avatar ? (
-                  <img src={user.avatar} alt={user.name} className="h-full w-full rounded-full object-cover" />
+                  <img src={getAvatarUrl(user.avatar)} alt={user.name} className="h-full w-full rounded-full object-cover" />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-xl font-bold text-white sm:text-2xl">
                     {user?.name?.charAt(0).toUpperCase()}
@@ -277,7 +278,7 @@ const FriendsTab = () => {
           {friends.map(f => (
             <div key={f._id} className="card flex items-center gap-3 p-4">
               <Link to={`/users/${f._id}`} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-lg font-bold text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/30 transition overflow-hidden">
-                {f.avatar ? <img src={f.avatar} alt={f.name} className="h-full w-full object-cover" /> : f.name?.charAt(0).toUpperCase()}
+                {f.avatar ? <img src={getAvatarUrl(f.avatar)} alt={f.name} className="h-full w-full object-cover" /> : f.name?.charAt(0).toUpperCase()}
               </Link>
               <div className="flex-1 min-w-0">
                 <Link to={`/users/${f._id}`} className="text-sm font-semibold text-white hover:text-amber-400 transition">{f.name}</Link>
@@ -310,7 +311,7 @@ const FriendsTab = () => {
           {requests.map(r => (
             <div key={r._id} className="card flex items-center gap-3 p-4">
               <Link to={`/users/${r.from._id}`} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-lg font-bold text-amber-400 border border-amber-500/30 hover:bg-amber-500/30 transition overflow-hidden">
-                {r.from.avatar ? <img src={r.from.avatar} alt={r.from.name} className="h-full w-full object-cover" /> : r.from.name?.charAt(0).toUpperCase()}
+                {r.from.avatar ? <img src={getAvatarUrl(r.from.avatar)} alt={r.from.name} className="h-full w-full object-cover" /> : r.from.name?.charAt(0).toUpperCase()}
               </Link>
               <div className="flex-1 min-w-0">
                 <Link to={`/users/${r.from._id}`} className="text-sm font-semibold text-white hover:text-amber-400 transition">{r.from.name}</Link>
@@ -341,7 +342,7 @@ const FriendsTab = () => {
             <Link key={c._id} to={`/dm/${c.other?._id}`}
               className="card flex items-center gap-3 p-4 transition hover:border-indigo-500/50">
               <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-lg font-bold text-indigo-400 border border-indigo-500/30 overflow-hidden">
-                {c.other?.avatar ? <img src={c.other.avatar} alt={c.other.name} className="h-full w-full object-cover" /> : c.other?.name?.charAt(0).toUpperCase()}
+                {c.other?.avatar ? <img src={getAvatarUrl(c.other.avatar)} alt={c.other.name} className="h-full w-full object-cover" /> : c.other?.name?.charAt(0).toUpperCase()}
                 {c.unread > 0 && (
                   <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white">{c.unread}</span>
                 )}

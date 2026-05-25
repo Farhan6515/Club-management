@@ -20,6 +20,7 @@ import { useAuth } from '../context/AuthContext';
 import ActivityCard from '../components/ActivityCard';
 import ClubChat from '../components/ClubChat';
 import { showPointsToast } from '../utils/pointsToast';
+import { getAvatarUrl } from '../utils/mediaUrl';
 
 const ClubDetails = () => {
   const { id } = useParams();
@@ -372,7 +373,7 @@ const ClubDetails = () => {
                   <div key={m._id} className="flex items-center gap-3 rounded-lg p-2 hover:bg-slate-700/50">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 font-semibold text-indigo-400 overflow-hidden">
                       {m.avatar
-                        ? <img src={m.avatar} alt={m.name} className="h-full w-full object-cover" />
+                        ? <img src={getAvatarUrl(m.avatar)} alt={m.name} className="h-full w-full object-cover" />
                         : m.name?.charAt(0).toUpperCase()
                       }
                     </div>

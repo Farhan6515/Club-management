@@ -5,6 +5,7 @@ import api from '../api/axios';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { showPointsToast } from '../utils/pointsToast';
+import { getAvatarUrl } from '../utils/mediaUrl';
 
 const typeConfig = {
   post:         { icon: FileText,  label: 'Post',         badge: 'bg-slate-700 text-slate-300' },
@@ -90,7 +91,7 @@ const ActivityCard = ({ activity, onDelete, showClubName = false }) => {
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 font-bold text-indigo-400 border border-indigo-500/30 overflow-hidden">
             {activity.author?.avatar
-              ? <img src={activity.author.avatar} alt={activity.author.name} className="h-full w-full object-cover" />
+              ? <img src={getAvatarUrl(activity.author.avatar)} alt={activity.author.name} className="h-full w-full object-cover" />
               : activity.author?.name?.charAt(0).toUpperCase() || '?'
             }
           </div>

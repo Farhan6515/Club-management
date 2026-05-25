@@ -18,6 +18,7 @@ import toast from 'react-hot-toast';
 import api from '../api/axios';
 import ActivityCard from '../components/ActivityCard';
 import { showPointsToast } from '../utils/pointsToast';
+import { getAvatarUrl } from '../utils/mediaUrl';
 
 const DEPARTMENTS = ['CSE', 'ECE', 'MECH', 'CIVIL', 'IT', 'EEE', 'OTHER'];
 const CATEGORIES = [
@@ -428,7 +429,7 @@ const ClubAdmin = () => {
                       <div className="flex items-center gap-2 min-w-0">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-sm font-semibold text-indigo-400 overflow-hidden">
                           {m.avatar
-                            ? <img src={m.avatar} alt={m.name} className="h-full w-full object-cover" />
+                            ? <img src={getAvatarUrl(m.avatar)} alt={m.name} className="h-full w-full object-cover" />
                             : m.name?.charAt(0).toUpperCase()
                           }
                         </div>

@@ -4,6 +4,7 @@ import { UserPlus, UserCheck, UserX, MessageSquare, Users, Clock } from 'lucide-
 import toast from 'react-hot-toast';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import { getAvatarUrl } from '../utils/mediaUrl';
 
 const UserProfile = () => {
   const { id } = useParams();
@@ -62,7 +63,7 @@ const UserProfile = () => {
           <div className="-mt-10 flex items-end justify-between gap-4">
             <div className="flex h-20 w-20 items-center justify-center rounded-2xl border-4 border-slate-800 bg-indigo-500/20 text-3xl font-extrabold text-indigo-400 overflow-hidden">
               {profile.avatar
-                ? <img src={profile.avatar} alt={profile.name} className="h-full w-full object-cover" />
+                ? <img src={getAvatarUrl(profile.avatar)} alt={profile.name} className="h-full w-full object-cover" />
                 : profile.name?.charAt(0).toUpperCase()
               }
             </div>
